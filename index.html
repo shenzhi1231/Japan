@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Japan Trip" />
+<meta name="theme-color" content="#f8f5ef" />
+<title>Japan Trip Dashboard | 2026/06/28–07/06</title>
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<style>
+:root{--bg:#f8f5ef;--card:#fffaf2;--ink:#2f2a24;--muted:#7a6e61;--line:#e4d8c7;--accent:#91683f;--accent2:#c48f53;--green:#5f7f5f;--shadow:0 16px 50px rgba(65,43,24,.14);}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#f8f5ef 0%,#fffaf2 55%,#f0eadf 100%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"Noto Sans SC",sans-serif;color:var(--ink);} a{color:inherit}.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;padding:24px 18px;background:rgba(255,250,242,.82);backdrop-filter:blur(14px);border-right:1px solid var(--line);overflow:auto}.brand{font-size:24px;font-weight:800;letter-spacing:.2px}.subtitle{color:var(--muted);margin:8px 0 22px;font-size:14px}.daybtn{width:100%;border:1px solid var(--line);background:white;border-radius:18px;padding:14px 15px;margin:9px 0;text-align:left;cursor:pointer;box-shadow:0 6px 18px rgba(65,43,24,.05);transition:.18s}.daybtn:hover{transform:translateY(-1px)}.daybtn.active{background:#2f2a24;color:white;border-color:#2f2a24}.daybtn small{display:block;opacity:.72;margin-top:4px}.main{padding:28px;max-width:1280px}.hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin-bottom:18px}.hero h1{margin:0;font-size:34px}.hero p{margin:8px 0 0;color:var(--muted)}.pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:white;border-radius:999px;padding:9px 13px;font-size:14px;color:var(--muted)}.layout{display:grid;grid-template-columns:1.08fr .92fr;gap:20px;align-items:start}.panel{background:rgba(255,250,242,.92);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}.map-panel{position:sticky;top:24px}.timeline-panel{position:sticky;top:24px;height:calc(100vh - 48px);display:flex;flex-direction:column}.panel-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center;flex:0 0 auto}.panel-head h2{font-size:18px;margin:0}.mapwrap{height:480px;position:relative}.map{height:100%;width:100%;background:#efe6d8}.route-link{position:absolute;right:14px;top:14px;z-index:500;background:#fff;border:1px solid var(--line);border-radius:999px;padding:10px 14px;text-decoration:none;box-shadow:0 8px 20px rgba(0,0,0,.12);font-size:13px}.timeline-scroll{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth;padding-bottom:14px}.timeline{padding:18px 20px 12px}.stop{display:grid;grid-template-columns:88px 1fr;gap:14px;padding:14px 0;border-bottom:1px dashed var(--line);cursor:pointer}.stop:last-child{border-bottom:0}.time{font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}.stop-card{background:white;border:1px solid var(--line);border-radius:20px;padding:14px;transition:.18s}.stop:hover .stop-card,.stop.active .stop-card{border-color:var(--accent2);box-shadow:0 8px 24px rgba(145,104,63,.18)}.stop h3{margin:0 0 5px;font-size:17px}.meta{font-size:13px;color:var(--muted);margin-bottom:8px;line-height:1.45}.desc{font-size:14px;line-height:1.65;margin:0;color:#423a32}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.btn{display:inline-flex;text-decoration:none;background:#f6eee3;border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:13px;cursor:pointer}.btn.active{background:#2f2a24;color:white;border-color:#2f2a24}.btn.done{background:#e8f0e4;border-color:#9db58f;color:#355235}.status-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.status-badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:4px 8px;font-size:12px;background:#fff7df;border:1px solid #ead49f;color:#7a5a15}.status-badge.done{background:#eaf3e6;border-color:#a8c39a;color:#3c603c}.status-summary{padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:white;margin-top:14px;font-size:13px;color:var(--muted);line-height:1.7}.stop-card.done{opacity:.72}.stop-card.done h3{text-decoration:line-through;text-decoration-thickness:2px}.small-status{margin-left:6px;font-size:12px}.detail{margin:16px 20px 20px;padding:18px;border-radius:22px;background:#fff;border:1px solid var(--line);box-shadow:0 8px 24px rgba(65,43,24,.08)}.detail h2{margin:0 0 12px}.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.infobox{background:#fffaf2;border:1px solid var(--line);border-radius:18px;padding:14px}.infobox b{display:block;margin-bottom:6px}.empty{padding:35px;text-align:center;color:var(--muted)}.legend{display:flex;gap:8px;flex-wrap:wrap}.tag{font-size:12px;border:1px solid var(--line);background:white;border-radius:999px;padding:6px 9px;color:var(--muted)}.leaflet-popup-content{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"Noto Sans SC",sans-serif;line-height:1.45}.num-icon{background:#2f2a24;color:white;border:3px solid #fff;border-radius:50%;width:30px;height:30px;display:grid;place-items:center;font-weight:800;box-shadow:0 5px 15px rgba(0,0,0,.25)}
+@media(max-width:980px){.app{grid-template-columns:1fr}.side{position:relative;height:auto}.layout{grid-template-columns:1fr}.map-panel,.timeline-panel{position:relative;top:auto;height:auto}.timeline-scroll{max-height:none;overflow:visible}.hero{display:block}.mapwrap{height:420px}.detail-grid{grid-template-columns:1fr}.main{padding:18px}.stop{grid-template-columns:72px 1fr}}
+
+.upgrade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0 22px}
+.upgrade-card{background:rgba(255,250,242,.94);border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 30px rgba(65,43,24,.09);padding:16px}
+.upgrade-card h2{font-size:18px;margin:0 0 10px}
+.upgrade-card h3{font-size:14px;margin:14px 0 8px;color:var(--accent)}
+.checklist{display:grid;gap:8px}
+.checkitem{border:1px solid var(--line);background:white;border-radius:16px;padding:10px;font-size:13px;line-height:1.5}
+.checkitem b{display:block;margin-bottom:3px}
+.badge{display:inline-flex;border-radius:999px;padding:3px 8px;margin-right:5px;font-size:12px;border:1px solid var(--line);background:#fff}
+.badge.need{background:#fff0e6;border-color:#e6b98a;color:#8a4b12}
+.badge.done{background:#eaf3e6;border-color:#a8c39a;color:#3c603c}
+.badge.site{background:#eef3ff;border-color:#b8c7ee;color:#2c4e91}
+.mini-links{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.mini-links a{font-size:12px;text-decoration:none;border:1px solid var(--line);background:#f6eee3;border-radius:999px;padding:6px 9px}
+.section-anchor{scroll-margin-top:20px}
+@media(max-width:980px){.upgrade-grid{grid-template-columns:1fr}}
+
+
+.mobile-hint{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.5}
+.edit-card{background:white;border:1px solid var(--line);border-radius:18px;padding:12px;margin:10px 0}
+.edit-card input,.edit-card textarea,.edit-card select{width:100%;border:1px solid var(--line);border-radius:12px;padding:9px;margin:5px 0 9px;background:#fffaf2;font:inherit;font-size:13px}
+.edit-card textarea{min-height:82px;resize:vertical}
+.ticket-row{border:1px solid var(--line);border-radius:16px;background:#fff;padding:10px;margin:8px 0;font-size:13px;line-height:1.55}
+.drag-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.segment-link{display:block;margin-top:8px;font-size:12px;color:var(--accent);text-decoration:underline}
+@media(max-width:720px){
+  .app{display:block}
+  .side{height:auto;position:relative;border-right:0;border-bottom:1px solid var(--line)}
+  .main{padding:12px}
+  .hero h1{font-size:24px}
+  .upgrade-grid{grid-template-columns:1fr}
+  .layout{display:block}
+  .map-panel{position:relative;top:auto}
+  .timeline-panel{height:auto;position:relative;top:auto;margin-top:14px}
+  .mapwrap{height:52vh;min-height:360px}
+  .stop{grid-template-columns:64px 1fr;gap:8px}
+  .time{font-size:12px}
+  .stop-card{padding:11px}
+  .detail{margin:12px;padding:14px}
+}
+
+
+.drag-handle{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:8px;background:#f6eee3;border:1px solid var(--line);margin-right:6px;cursor:grab;user-select:none;color:var(--muted)}
+.drag-handle:active{cursor:grabbing}
+.sortable-ghost{opacity:.35}
+.sortable-chosen .stop-card{border-color:var(--accent2);box-shadow:0 12px 32px rgba(145,104,63,.22)}
+.drag-tip{font-size:12px;color:var(--muted);margin-left:8px}
+@media(max-width:720px){.drag-handle{width:30px;height:30px}.drag-tip{display:block;margin:6px 0 0}}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">🇯🇵 Japan Trip</div>
+    <div class="subtitle">2026/06/28 – 2026/07/06<br>点击日期切换每天地图和路线<br><span class="mobile-hint">手机可直接用 Safari/Chrome 打开，也可“添加到主屏幕”。</span></div>
+    <button class="daybtn" id="ticketBtn" onclick="renderTickets()"><b>🎫 车票 / 门票专区</b><small>提前购票检查 + 专题收藏</small></button><div id="dayList"></div><div class="status-summary" id="statusSummary">⭐ 收藏：0<br>✓ 已打卡：0</div>
+  </aside>
+  <main class="main">
+    <section class="hero">
+      <div><h1 id="title">Day 2 · Tama Zoo + Ghibli + Kichijoji</h1><p id="summary">真实地图预览用 OpenStreetMap 显示；点击 Marker 或时间轴，地图下方会显示详细介绍，也可打开 Google Maps。</p></div>
+      <div class="pill">🗺️ 固定地图 + 地图下方详情 + ↕️ 独立滑动时间轴</div>
+    </section>
+    <section class="layout">
+      <div class="panel map-panel">
+        <div class="panel-head"><h2>整日路线总览</h2><div class="legend"><span class="tag">Marker 可点击</span><span class="tag">详情在地图下方</span><span class="tag">Google Maps 跳转</span><span class="tag">滚轮/触控板可缩放</span></div></div>
+        <div class="mapwrap"><a id="fullRoute" class="route-link" target="_blank" rel="noopener">在 Google Maps 打开整日路线</a><div id="map" class="map"></div></div>
+        <section id="detail" class="detail map-detail"></section>
+      </div>
+      <div class="panel timeline-panel" id="timelinePanel">
+        <div class="panel-head"><h2>当天时间轴</h2><span id="stopCount" class="tag"></span></div>
+        <div class="timeline-scroll" id="timelineScroll">
+          <div id="timeline" class="timeline"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<section id="ticketTemplate" class="upgrade-grid section-anchor" style="display:none">
+      <div class="upgrade-card">
+        <h2>🎫 车票专区</h2>
+        <div class="checklist">
+          <div class="checkitem"><span class="badge done">已处理</span><b>7/3 岚山小火车</b>09:30 龟冈 → 岚山；已加入电子车票按钮。<div class="mini-links"><a target="_blank" href="https://t.linktivity.io/issueticket/sagano-kanko/tHCx6W72tisyvPQw/ARS_SAGANO_KANKO-20260621-9CFP?lang=ZH">打开电子车票</a><a target="_blank" href="https://www.sagano-kanko.co.jp/en/ticket/">官方购票说明</a></div></div>
+          <div class="checkitem"><span class="badge site">建议预订</span><b>6/30 东京 → 名古屋 新干线</b>建议提前买 Nozomi 指定席，尤其带行李时更省心。</div>
+          <div class="checkitem"><span class="badge site">建议预订</span><b>6/30 名古屋 → 奈良 近铁特急</b>晚上移动日，建议提前确认车次并购买指定席。</div>
+          <div class="checkitem"><span class="badge site">建议预订</span><b>7/4 京都 → 东京 新干线</b>中午回东京，建议提前选座。</div>
+          <div class="checkitem"><span class="badge site">建议预订</span><b>6/28 / 7/6 Narita Express</b>机场交通可当天买，也可提前买；带行李时 NEX 最省心。</div>
+        </div>
+      </div>
+      <div class="upgrade-card">
+        <h2>🎟️ 门票专区</h2>
+        <div class="checklist">
+          <div class="checkitem"><span class="badge need">必须提前</span><b>6/29 三鹰之森吉卜力美术馆</b>全部入馆都需要提前预约，现场不售票。<div class="mini-links"><a target="_blank" href="https://www.ghibli-museum.jp/en/tickets/">官方门票说明</a></div></div>
+          <div class="checkitem"><span class="badge need">建议提前确认</span><b>7/3 佑斋亭</b>常规参观有入场费；旺季/特别时期可能需要预约，建议出发前再次确认。<div class="mini-links"><a target="_blank" href="https://yusai.kyoto/galleryvisit?lang=en">佑斋亭参观说明</a></div></div>
+          <div class="checkitem"><span class="badge site">现场购票</span><b>7/4 银阁寺</b>现场购票即可，不需要提前预约。</div>
+          <div class="checkitem"><span class="badge site">现场购票</span><b>7/2 平等院</b>庭园现场购票；凤凰堂内部另收小额参观费，名额按时段限制。</div>
+          <div class="checkitem"><span class="badge site">现场购票</span><b>动物园</b>Tama Zoo / 东山动物园 / 金泽动物园都可现场购票；金泽动物园成人票约500日元。</div>
+          <div class="checkitem"><span class="badge site">现场购票</span><b>7/3 清水寺</b>7/3不在2026夏季夜间特别开放期间；若傍晚去，应以常规开放时间和东山街区夜景为主。</div>
+        </div>
+      </div>
+      <div class="upgrade-card">
+        <h2>🧭 专题收藏</h2>
+        <h3>🐨 Koala Collection</h3>
+        <div class="checkitem">6/29 Tama Zoo · 6/30 东山动物园 · 7/5 金泽动物园：都已在每日路线中标注，可用收藏/打卡记录。</div>
+        <h3>🛍️ Tokyo Shopping Layer</h3>
+        <div class="checkitem">6/28、7/4、7/6 已重复标注银座首饰/中古/服饰和秋叶原购物点。</div>
+        <h3>🍽️ Food Backup</h3>
+        <div class="checkitem">7/5 江之岛已加入 Tobiccho 取号、LONCAFE、Uomi-tei、Bentenmaru、Uoharu 备用餐厅。</div>
+      </div>
+    </section>
+<script>
+const days=[
+{date:'6/28',title:'Arrive Tokyo · Akihabara & Ginza Shopping',note:'14:50 抵达成田，入住 Courtyard Tokyo Station；傍晚秋叶原 + 银座首饰/中古/服饰购物预热',stops:[
+{time:'14:50',name:'Narita Airport / 成田机场抵达',emoji:'✈️',cat:'机场',addr:'Narita Airport, Chiba',lat:35.7720,lng:140.3929,desc:'抵达成田机场，办理入境和取行李。建议先买/充值交通IC卡，准备进东京市区。',tips:['预留入境和取行李时间','NEX到东京站最方便','如果行李多，不建议绕去上野'],gmap:'https://www.google.com/maps/search/?api=1&query=Narita+Airport'},
+{time:'16:00–17:00',name:'Narita Express to Tokyo Station / NEX进东京',emoji:'🚆',cat:'交通',addr:'Narita Airport → Tokyo Station',lat:35.7720,lng:140.3929,desc:'从成田机场乘 Narita Express 前往东京站，适合直接入住东京站附近酒店。',tips:['车上有行李架','东京站到酒店很近'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Narita+Airport&destination=Tokyo+Station&travelmode=transit'},
+{time:'17:10',name:'Courtyard by Marriott Tokyo Station',emoji:'🏨',cat:'酒店',addr:'2-1-3 Kyobashi, Chuo-ku, Tokyo 104-0031',lat:35.67695,lng:139.77095,desc:'办理入住，放行李后开始晚间购物。',tips:['今晚重点轻松逛','不要安排太多景点'],gmap:'https://www.google.com/maps/search/?api=1&query=Courtyard+by+Marriott+Tokyo+Station'},
+{time:'18:00–20:00',name:'Akihabara Shopping / 秋叶原动漫谷子',emoji:'🎮',cat:'购物',addr:'Akihabara, Tokyo',lat:35.6984,lng:139.7730,desc:'第一晚重点逛秋叶原，适合买动漫谷子、扭蛋、手办、周边。',tips:['先踩点，不必一次买完','后面7/4和7/6还有购物时间'],gmap:'https://www.google.com/maps/search/?api=1&query=Akihabara+Tokyo'},
+{time:'20:15',name:'Ginza Jewelry & Fashion Area / 银座首饰服饰区域',emoji:'💍',cat:'购物区域',addr:'Ginza, Tokyo',lat:35.6719,lng:139.7650,desc:'银座首饰、裙装和中古店区域总览。6/28先逛一小段，重点店后面7/4和7/6继续。',tips:['COCOSHNIK / agete / SNIDEL 可先看款式','中古店可留到7/4或7/6重点逛'],gmap:'https://www.google.com/maps/search/?api=1&query=Ginza+jewelry+shopping'},
+{time:'20:20',name:'COCOSHNIK Ginza / COCOSHNIK 银座',emoji:'💍',cat:'首饰',addr:'Ginza, Tokyo',lat:35.6727,lng:139.7652,desc:'首饰店标记点，适合看精致日系首饰。',tips:['先看款式和价格','后面可回购'],gmap:'https://www.google.com/maps/search/?api=1&query=COCOSHNIK+Ginza'},
+{time:'20:25',name:'agete Ginza / agete 银座',emoji:'💎',cat:'首饰',addr:'Ginza, Tokyo',lat:35.6722,lng:139.7653,desc:'日系首饰店标记点，适合戒指、耳饰、项链。',tips:['适合慢慢试戴'],gmap:'https://www.google.com/maps/search/?api=1&query=agete+Ginza'},
+{time:'20:30',name:'SNIDEL Ginza / SNIDEL 裙装',emoji:'👗',cat:'服饰',addr:'Ginza, Tokyo',lat:35.6724,lng:139.7648,desc:'裙装和日系女装标记点。',tips:['可先看尺码和款式'],gmap:'https://www.google.com/maps/search/?api=1&query=SNIDEL+Ginza'},
+{time:'20:35',name:'Ginza Vintage Bag Shops / 银座中古店标识',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6717,lng:139.7646,desc:'中古包包店总览：Orange Boutique、BRAND OFF、ALLU、CO&CO、RT Ginza、KOMEHYO 银座店。',tips:['6/28先标记路线','7/4和7/6重点买包'],gmap:'https://www.google.com/maps/search/?api=1&query=Ginza+vintage+brand+bag+shops'},
+{time:'21:30',name:'Return Courtyard Tokyo Station',emoji:'🏨',cat:'返程',addr:'Ginza → Tokyo Station Hotel',lat:35.67695,lng:139.77095,desc:'返回东京站酒店休息。',tips:['第一天不要太晚'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Ginza&destination=Courtyard+by+Marriott+Tokyo+Station&travelmode=transit'}
+]},
+{date:'6/29',title:'Tama Zoo · 吉卜力 · 吉祥寺',note:'考拉 Kilara/Azuma + 13:00 吉卜力入馆 + 吉祥寺小店与晚餐',stops:[
+ {time:'07:45',name:'Courtyard by Marriott Tokyo Station',emoji:'🏨',cat:'酒店',addr:'2-1-3 Kyobashi, Chuo-ku, Tokyo 104-0031',lat:35.67695,lng:139.77095,desc:'从酒店步行至东京站/京桥站区域，建议提前准备好 IC 卡、相机和当天门票。',tips:['早上尽量 07:45 出门','酒店靠近东京站，适合转 JR 中央线'],gmap:'https://www.google.com/maps/search/?api=1&query=Courtyard+by+Marriott+Tokyo+Station'},
+ {time:'09:30–11:20',name:'Tama Zoological Park / 多摩动物公园',emoji:'🐨',cat:'动物园',addr:'7-1-1 Hodokubo, Hino, Tokyo 191-0042',lat:35.64979,lng:139.40395,desc:'开园后直奔澳洲园区考拉馆，重点找 Kilara（きらら）和 Azuma（あずま）。先快速绕一圈看名字牌，再回到最佳角度拍照。',tips:['09:35–10:20 看考拉','10:20–10:40 买考拉周边','只加看雪豹/红熊猫，不要硬逛全园'],gmap:'https://www.google.com/maps/search/?api=1&query=Tama+Zoological+Park'},
+ {time:'12:30',name:'Ghibli Museum, Mitaka / 三鹰之森吉卜力美术馆',emoji:'🎬',cat:'美术馆',addr:'1-1-83 Shimorenjaku, Mitaka-shi, Tokyo 181-0013',lat:35.69624,lng:139.57043,desc:'13:00 指定时间入馆，建议 12:30–12:45 到达。重点看中央大厅、限定短片、屋顶机器人兵和 Mamma Aiuto 商店。',tips:['门票为 13:00 入馆','商店建议放最后','馆内多数区域不可拍照'],gmap:'https://www.google.com/maps/search/?api=1&query=Ghibli+Museum+Mitaka'},
+ {time:'16:00',name:'Inokashira Park / 井之头恩赐公园',emoji:'🌳',cat:'散步',addr:'1-18-31 Gotenyama, Musashino, Tokyo',lat:35.69794,lng:139.57424,desc:'从吉卜力美术馆出来后，穿过井之头公园往吉祥寺方向散步。傍晚光线好，节奏也最舒服。',tips:['适合拍照和缓冲休息','步行前往吉祥寺商圈'],gmap:'https://www.google.com/maps/search/?api=1&query=Inokashira+Park'},
+ {time:'17:00',name:'Kichijoji Petit Mura / 吉祥寺 Petit Mura',emoji:'🦉',cat:'小店/拍照',addr:'2-33-2 Kichijoji Honcho, Musashino, Tokyo',lat:35.70437,lng:139.57696,desc:'童话风小建筑群，很适合接在吉卜力后面逛。可拍外观、看猫主题小店与茶屋。',tips:['建议停留 25–35 分钟','适合拍照，但留意店内拍摄规则'],gmap:'https://www.google.com/maps/search/?api=1&query=Kichijoji+Petit+Mura'},
+ {time:'17:45',name:'Sun Road Shopping Street / 吉祥寺 Sunroad 商店街',emoji:'🛍️',cat:'商店街',addr:'Kichijoji Honcho, Musashino, Tokyo',lat:35.70495,lng:139.58031,desc:'吉祥寺最经典的拱廊商店街，可顺路看药妆、零食、文具和杂货。',tips:['适合边走边买小东西','离车站和 Harmonica Yokocho 很近'],gmap:'https://www.google.com/maps/search/?api=1&query=Kichijoji+Sunroad+Shopping+Street'},
+ {time:'18:15',name:'Harmonica Yokocho / ハモニカ横丁',emoji:'🏮',cat:'小巷',addr:'Kichijoji Honcho 1-chome, Musashino, Tokyo',lat:35.70491,lng:139.57914,desc:'吉祥寺站北口旁的小巷，傍晚灯亮后很有东京本地感，适合逛一圈或找小酒馆。',tips:['小巷较窄，注意行人','拍照很有氛围'],gmap:'https://www.google.com/maps/search/?api=1&query=Harmonica+Yokocho+Kichijoji'},
+ {time:'18:30',name:'Satou Kichijoji / 吉祥寺さとう',emoji:'🥩',cat:'小吃',addr:'1-1-8 Kichijoji Honcho, Musashino, Tokyo',lat:35.70499,lng:139.57974,desc:'吉祥寺名物炸肉饼店，适合作为晚饭前小吃；如果排队太长可以跳过。',tips:['经常排队','接近关门前可能售罄'],gmap:'https://www.google.com/maps/search/?api=1&query=Satou+Kichijoji'},
+ {time:'19:00',name:'晚饭候选 A：Hikiniku to Come Kichijoji',emoji:'🍽️',cat:'晚餐候选',addr:'2-8-3 Kichijoji Honcho, Musashino, Tokyo',lat:35.70538,lng:139.57823,desc:'人气汉堡排，适合想吃日式肉料理、预算轻松的一餐。若排队太久，可切换到 DRA9 或居酒屋。',tips:['人气高，建议早点去或现场看排队','适合第一次来吉祥寺'],gmap:'https://www.google.com/maps/search/?api=1&query=Hikiniku+to+Come+Kichijoji'},
+ {time:'19:00',name:'晚饭候选 B：DRA Nine Kichijoji',emoji:'🍝',cat:'晚餐候选',addr:'1-8-15 Kichijoji Honcho, Musashino, Tokyo',lat:35.70410,lng:139.57988,desc:'气氛好的餐厅，适合慢慢吃晚饭，选择比单一汉堡排更丰富。',tips:['适合不想排太久时备选','适合两人以上分享'],gmap:'https://www.google.com/maps/search/?api=1&query=DRA+Nine+Kichijoji'},
+ {time:'19:00',name:'晚饭候选 C：Yaguya / やぐや',emoji:'🍶',cat:'晚餐候选',addr:'2-8-9 Kichijoji Honcho, Musashino, Tokyo',lat:35.70549,lng:139.57855,desc:'本地感更强的居酒屋备选，适合想体验吉祥寺晚间氛围。',tips:['适合小酌和日式小菜','看当天座位情况决定'],gmap:'https://www.google.com/maps/search/?api=1&query=Yaguya+Kichijoji'},
+ {time:'20:00–20:45',name:'返回 Courtyard Tokyo Station',emoji:'🚆',cat:'返程',addr:'Kichijoji Station → Tokyo Station → Hotel',lat:35.67695,lng:139.77095,desc:'从吉祥寺站搭 JR 中央线返回东京站，再步行回酒店。买太多周边时，也可从吉祥寺直接打车回酒店。',tips:['电车约 30–40 分钟','打车更轻松但费用明显更高'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Kichijoji+Station&destination=Courtyard+by+Marriott+Tokyo+Station'}
+]},
+{date:'6/30',title:'Nagoya · Tokoname · Nara',note:'东山动物园考拉馆 + 常滑招财猫与陶器散步道 + 晚上入住奈良 JW Marriott',stops:[
+ {time:'08:30',name:'Courtyard by Marriott Tokyo Station',emoji:'🏨',cat:'酒店',addr:'2-1-3 Kyobashi, Chuo-ku, Tokyo 104-0031',lat:35.67695,lng:139.77095,desc:'从酒店出发前往东京站，搭乘东海道新干线前往名古屋。早餐和午饭都可以在车站或路上解决，不单独预留餐厅时间。',tips:['08:30 出门比较舒服','提前准备好新干线票或 IC/信用卡','把当天会用到的相机和充电宝放随身包'],gmap:'https://www.google.com/maps/search/?api=1&query=Courtyard+by+Marriott+Tokyo+Station'},
+ {time:'09:09–10:47',name:'Tokyo Station → Nagoya Station / Nozomi 新干线',emoji:'🚅',cat:'交通',addr:'Tokyo Station → Nagoya Station',lat:35.68124,lng:139.76712,desc:'建议搭乘 09:09 左右从东京站出发的 Nozomi，约 1小时40分抵达名古屋。车上可以吃早餐或便当。',tips:['建议提前买指定席','尽量坐靠近行李架或大件行李区的位置','到名古屋后先寄存行李'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Tokyo+Station&destination=Nagoya+Station&travelmode=transit'},
+ {time:'10:50',name:'Nagoya Station Locker / 名古屋站行李寄存',emoji:'🧳',cat:'行李寄存',addr:'1-1-4 Meieki, Nakamura Ward, Nagoya, Aichi',lat:35.17092,lng:136.88154,desc:'抵达名古屋后先寄存大件行李。晚上从常滑回到名古屋站后取行李，再搭近铁特急前往奈良。',tips:['优先找大型 Locker','如果 Locker 满了，改用站内行李寄存服务','记好寄存位置，晚上回站取行李'],gmap:'https://www.google.com/maps/search/?api=1&query=Nagoya+Station+coin+locker'},
+ {time:'11:15–13:45',name:'Higashiyama Zoo Koala House / 东山动物园考拉馆',emoji:'🐨',cat:'动物园',addr:'3-70 Higashiyama Motomachi, Chikusa Ward, Nagoya, Aichi 464-0804',lat:35.15576,lng:136.98785,desc:'当天核心目标之一：东山动物园考拉馆。这里是日本非常有名的考拉展示地，建议集中时间看考拉和买东山限定考拉周边。',tips:['入园后直奔考拉馆','先看考拉，再买周边','13:45 左右准备离园，14:00 出发去常滑'],gmap:'https://www.google.com/maps/search/?api=1&query=Higashiyama+Zoo+and+Botanical+Gardens+Koala+House'},
+ {time:'14:00–15:00',name:'Higashiyama Zoo → Tokoname / 前往常滑',emoji:'🚃',cat:'交通',addr:'Higashiyama Park Station → Tokoname Station',lat:35.16049,lng:136.97395,desc:'从东山动物园前往常滑。目标是 15:00 左右到常滑，先去最早关门的 Imawo Space。',tips:['午饭不单独安排，在路上解决','常滑店铺关门偏早，所以到站后先冲 Imawo Space'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Higashiyama+Zoo+and+Botanical+Gardens&destination=Tokoname+Station&travelmode=transit'},
+ {time:'15:05–15:40',name:'Imawo Space',emoji:'🏺',cat:'陶艺空间',addr:'2 Chome-87 Sakaemachi, Tokoname, Aichi 479-0836',lat:34.88658,lng:136.84286,desc:'常滑艺术空间与陶艺杂货店。因为关门较早，建议到常滑后第一站先来这里。',tips:['最早关门，优先安排','适合看手作器皿、小摆件和艺术杂货','喜欢就先买，不要等回头'],gmap:'https://www.google.com/maps/search/?api=1&query=Imawo+Space+Tokoname'},
+ {time:'15:45–16:20',name:'Entotsuya / えんとつ屋',emoji:'☕',cat:'陶器小店',addr:'3 Chome-45 Sakaemachi, Tokoname, Aichi 479-0836',lat:34.88715,lng:136.84336,desc:'常滑散步道附近的小店，适合看招财猫、陶器、杂货和咖啡。',tips:['通常营业到傍晚，仍建议尽早去','适合买小件陶器和伴手礼','部分小店可能更偏现金支付'],gmap:'https://www.google.com/maps/search/?api=1&query=Entotsuya+Tokoname'},
+ {time:'16:20–16:45',name:'Tokonyan & Maneki Neko Street / 招财猫大道',emoji:'🐱',cat:'地标',addr:'Sakaemachi, Tokoname, Aichi',lat:34.88786,lng:136.84067,desc:'常滑最经典的招财猫地标，包括巨型招财猫 Tokonyan 和招财猫大道。适合拍照打卡。',tips:['一定要和 Tokonyan 合照','下午光线更柔和','可以顺路看沿途陶器装饰'],gmap:'https://www.google.com/maps/search/?api=1&query=Tokonyan+Tokoname'},
+ {time:'16:45–18:30',name:'Tokoname Pottery Footpath / 常滑陶器散步道',emoji:'🏮',cat:'散步道',addr:'Sakaemachi, Tokoname, Aichi 479-0836',lat:34.88688,lng:136.84155,desc:'常滑最值得慢慢走的区域，有陶器老街、烟囱、窑场遗迹、小店和招财猫元素。傍晚游客少，氛围很好。',tips:['这是当天常滑主线','慢慢逛，不要赶','适合买常滑烧和招财猫陶器'],gmap:'https://www.google.com/maps/search/?api=1&query=Tokoname+Pottery+Footpath'},
+ {time:'18:30–20:00',name:'Dinner in Tokoname / 常滑晚餐',emoji:'🍽️',cat:'晚餐',addr:'Tokoname, Aichi',lat:34.88605,lng:136.84205,desc:'在常滑吃晚饭后再回名古屋。这样可以多留一点时间逛常滑，不用太早赶回名古屋市区。',tips:['晚饭建议控制在 20:00 前结束','如果餐厅排队太久，优先选择车站附近或散步道附近备选','保留回名古屋取行李时间'],gmap:'https://www.google.com/maps/search/?api=1&query=restaurant+Tokoname+Aichi'},
+ {time:'20:00–20:50',name:'Tokoname → Nagoya Station / 返回名古屋取行李',emoji:'🚃',cat:'交通',addr:'Tokoname Station → Nagoya Station',lat:34.88923,lng:136.83533,desc:'从常滑站返回名古屋站，取回早上寄存的行李。',tips:['20:00 左右离开常滑比较稳','回名古屋后先取行李，再去近铁名古屋站'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Tokoname+Station&destination=Nagoya+Station&travelmode=transit'},
+ {time:'21:00左右',name:'Kintetsu Nagoya → Nara / 近铁特急前往奈良',emoji:'🚄',cat:'交通',addr:'Kintetsu Nagoya Station → Kintetsu Nara Station',lat:35.16985,lng:136.88408,desc:'晚上从近铁名古屋站搭近铁特急前往奈良。建议不要拖到太晚，21:00 左右出发比较稳。',tips:['提前确认近铁特急车次','如需换乘，留足站内移动时间','不要错过当天较晚班次'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Kintetsu+Nagoya+Station&destination=Kintetsu+Nara+Station&travelmode=transit'},
+ {time:'22:45–23:00',name:'JW Marriott Hotel Nara',emoji:'🏨',cat:'酒店',addr:'1-1-1 Sanjo-oji, Nara, Nara 630-8013',lat:34.68494,lng:135.80555,desc:'抵达奈良后前往 JW Marriott Hotel Nara 办理入住。当天行程结束，第二天再安排奈良。',tips:['抵达较晚，建议直接入住休息','把第二天要用的东西简单整理好'],gmap:'https://www.google.com/maps/search/?api=1&query=JW+Marriott+Hotel+Nara'}
+]},{date:'7/1',title:'Nara Slow Day',note:'兴福寺 + 奈良国立博物馆(经过) + 万叶植物园 + 春日大社 + 若草山 + 东大寺 + 小鹿周边购物',stops:[
+ {time:'09:00',name:'JW Marriott Nara',emoji:'🏨',cat:'酒店',addr:'Nara',lat:34.68494,lng:135.80555,desc:'睡到自然醒后出发，今天整体节奏放松。',tips:['不需要赶早'] ,gmap:'https://www.google.com/maps/search/?api=1&query=JW+Marriott+Nara'},
+ {time:'09:30–10:15',name:'Kofuku-ji / 兴福寺',emoji:'🏯',cat:'寺院',addr:'Nara',lat:34.6839,lng:135.8328,desc:'奈良经典寺院与五重塔区域。',tips:['搭配猿泽池散步'],gmap:'https://www.google.com/maps/search/?api=1&query=Kofukuji+Nara'},
+ {time:'10:15',name:'Nara National Museum',emoji:'🏛️',cat:'经过',addr:'Nara',lat:34.6845,lng:135.8398,desc:'只经过拍照，不进馆。',tips:['停留10分钟即可'],gmap:'https://www.google.com/maps/search/?api=1&query=Nara+National+Museum'},
+ {time:'10:30–11:00',name:'Mizuya Chaya',emoji:'🍵',cat:'茶歇',addr:'Kasuganocho, Nara',lat:34.6827,lng:135.8465,desc:'森林茶屋，喝茶休息。',tips:['适合抹茶'],gmap:'https://www.google.com/maps/search/?api=1&query=Mizuya+Chaya+Nara'},
+ {time:'11:15–12:15',name:'Lunch - Gyumabushi Miyama',emoji:'🍱',cat:'午餐',addr:'Nara',lat:34.6852,lng:135.8427,desc:'奈良公园附近午餐。',tips:['牛肉饭三吃'],gmap:'https://www.google.com/maps/search/?api=1&query=Gyumabushi+Miyama+Nara'},
+ {time:'12:20–13:00',name:'Manyo Botanical Garden',emoji:'🌿',cat:'植物园',addr:'Nara',lat:34.6809,lng:135.8487,desc:'安静散步与赏景。',tips:['树荫较多'],gmap:'https://www.google.com/maps/search/?api=1&query=Manyo+Botanical+Garden+Nara'},
+ {time:'13:00–14:00',name:'Kasuga Taisha',emoji:'⛩️',cat:'神社',addr:'Nara',lat:34.6813,lng:135.8489,desc:'春日大社与森林参道。',tips:['石灯笼参道'],gmap:'https://www.google.com/maps/search/?api=1&query=Kasuga+Taisha'},
+ {time:'14:00–15:00',name:'Afternoon Tea',emoji:'☕',cat:'下午茶',addr:'Naramachi',lat:34.6818,lng:135.8298,desc:'抹茶与和果子休息时间。',tips:['慢慢坐'],gmap:'https://www.google.com/maps/search/?api=1&query=Naramachi+Tea+House'},
+ {time:'15:15–16:15',name:'Mount Wakakusa',emoji:'⛰️',cat:'观景',addr:'Nara',lat:34.6898,lng:135.8546,desc:'若草山看奈良全景。',tips:['适合发呆'],gmap:'https://www.google.com/maps/search/?api=1&query=Mount+Wakakusa'},
+ {time:'16:15–17:30',name:'Deer Souvenir Shopping',emoji:'🦌',cat:'购物',addr:'Nara Park Area',lat:34.687,lng:135.847,desc:'购买小鹿玩偶、钥匙扣、奈良限定杂货。',tips:['预留充足购物时间'],gmap:'https://www.google.com/maps/search/?api=1&query=Nara+deer+souvenir'},
+ {time:'17:30–18:30',name:'Todai-ji',emoji:'🏯',cat:'寺院',addr:'Nara',lat:34.6891,lng:135.8398,desc:'傍晚游览东大寺。',tips:['游客较少'],gmap:'https://www.google.com/maps/search/?api=1&query=Todaiji'},
+ {time:'19:00–20:15',name:'Dinner in Nara',emoji:'🍽️',cat:'晚餐',addr:'Nara',lat:34.685,lng:135.827,desc:'推荐 Yamatoan、COO 或回酒店 Azekura。',tips:['节奏放松'],gmap:'https://www.google.com/maps/search/?api=1&query=Nara+restaurant'},
+ {time:'20:30',name:'Return JW Marriott Nara',emoji:'🏨',cat:'酒店',addr:'Nara',lat:34.68494,lng:135.80555,desc:'返回酒店休息。',tips:['为后续行程养精蓄锐'],gmap:'https://www.google.com/maps/search/?api=1&query=JW+Marriott+Nara'}
+]},{date:'7/2',title:'Uji → Kyoto Evening',note:'奈良出发，宇治抹茶巡礼，入住北白川民宿，傍晚伏见稻荷与祇园夜景',stops:[
+{time:'08:30',name:'JW Marriott Nara',emoji:'🏨',cat:'酒店',addr:'1-1-1 Sanjo-oji, Nara, Nara 630-8013',lat:34.68494,lng:135.80555,desc:'早餐后从奈良酒店出发，今天先去宇治半日游，再前往京都北白川民宿。',tips:['从奈良出发','大件行李随身带到宇治后寄存','出发前确认住宿入住时间'],gmap:'https://www.google.com/maps/search/?api=1&query=JW+Marriott+Hotel+Nara'},
+{time:'09:15–10:15',name:'Nara → Uji / 前往宇治',emoji:'🚆',cat:'交通',addr:'Nara → Uji',lat:34.68494,lng:135.80555,desc:'从 JW Marriott Nara 前往宇治，预计约 45–60 分钟。到达后先寄存行李。',tips:['建议用 Google Maps 实时确认换乘','行李多的话可打车到近铁/JR车站'],gmap:'https://www.google.com/maps/dir/?api=1&origin=JW+Marriott+Hotel+Nara&destination=Uji+Station&travelmode=transit'},
+{time:'10:15',name:'Uji Station Locker / 宇治站寄存行李',emoji:'🧳',cat:'寄存',addr:'Uji Station, Uji, Kyoto',lat:34.89023,lng:135.80077,desc:'在 JR 宇治站或京阪宇治站寄存行李，轻装开始宇治半日游。',tips:['优先找大型 Locker','记好储物柜位置','现金和 IC 卡都准备好'],gmap:'https://www.google.com/maps/search/?api=1&query=Uji+Station+coin+locker'},
+{time:'10:30',name:'Nakamura Tokichi Honten / 中村藤吉本店',emoji:'🍵',cat:'抹茶',addr:'10 Ichiban, Uji, Kyoto 611-0021',lat:34.89102,lng:135.80054,desc:'宇治抹茶必访名店，适合安排第一站。推荐抹茶芭菲、生茶ゼリイ和抹茶饮品。',tips:['早点去排队较少','适合坐下来慢慢吃甜品'],gmap:'https://www.google.com/maps/search/?api=1&query=Nakamura+Tokichi+Honten+Uji'},
+{time:'11:15',name:'Matcha Republic Uji Main Store / 抹茶共和国',emoji:'🍵',cat:'抹茶',addr:'Uji, Kyoto',lat:34.89052,lng:135.80536,desc:'网红瓶装抹茶店，瓶子设计很适合拍照。',tips:['适合买饮品和拍照','停留时间不用太长'],gmap:'https://www.google.com/maps/search/?api=1&query=Matcha+Republic+Uji+Main+Store'},
+{time:'11:45',name:'Byodoin Omotesando / 平等院表参道',emoji:'🏮',cat:'老街',addr:'Uji, Kyoto',lat:34.89001,lng:135.80663,desc:'宇治最适合慢慢逛的表参道，可以买抹茶点心、茶叶和茶具。',tips:['适合伴手礼','不要赶路，慢慢逛'],gmap:'https://www.google.com/maps/search/?api=1&query=Byodoin+Omotesando+Uji'},
+{time:'12:15',name:'Byodo-in / 平等院',emoji:'🏯',cat:'寺院',addr:'116 Uji Renge, Uji, Kyoto 611-0021',lat:34.88926,lng:135.80767,desc:'宇治代表性景点，凤凰堂是经典画面。',tips:['预留40分钟左右','拍照很好看'],gmap:'https://www.google.com/maps/search/?api=1&query=Byodoin+Uji'},
+{time:'13:00',name:'Itoh Kyuemon Uji Main Store / 伊藤久右卫门',emoji:'🍱',cat:'午餐',addr:'Uji, Kyoto',lat:34.89245,lng:135.80613,desc:'抹茶主题午餐与甜品，适合作为宇治半日游的午饭点。',tips:['可选抹茶荞麦面/乌冬/甜品','人多时可改成外带点心'],gmap:'https://www.google.com/maps/search/?api=1&query=Itoh+Kyuemon+Uji+Main+Store'},
+{time:'14:00',name:'Uji River / 宇治川',emoji:'🌊',cat:'散步',addr:'Uji, Kyoto',lat:34.89109,lng:135.81018,desc:'午饭后沿宇治川慢慢散步，节奏放松。',tips:['适合拍照和休息','天气热的话注意补水'],gmap:'https://www.google.com/maps/search/?api=1&query=Uji+River'},
+{time:'14:30',name:'Ujigami Shrine / 宇治上神社',emoji:'⛩️',cat:'神社',addr:'59 Uji Yamada, Uji, Kyoto 611-0021',lat:34.89225,lng:135.81139,desc:'宇治川对岸的安静神社，适合短暂停留。',tips:['兔子元素可留意','不用安排太久'],gmap:'https://www.google.com/maps/search/?api=1&query=Ujigami+Shrine'},
+{time:'15:15–16:00',name:'Uji → Kyoto Stay / 前往北白川民宿',emoji:'🚆',cat:'交通',addr:'Uji → 31-5 Kitashirakawa Yamadacho, Kyoto',lat:34.89023,lng:135.80077,desc:'取回行李后从宇治前往京都北白川民宿。',tips:['到京都后先入住休息','从民宿再出发去晚间景点'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Uji+Station&destination=31-5+Kitashirakawa+Yamadacho+Kyoto&travelmode=transit'},
+{time:'16:00',name:'Kyoto Stay / 北白川民宿',emoji:'🏡',cat:'住宿',addr:'31-5 Kitashirakawa Yamadacho, Sakyo Ward, Kyoto 606-8272',lat:35.031,lng:135.794,desc:'入住北白川民宿，放行李并稍作休息。',tips:['这里是7/2和7/3两晚住宿','出门前带好充电宝和相机'],gmap:'https://www.google.com/maps/search/?api=1&query=31-5+Kitashirakawa+Yamadacho+Kyoto'},
+{time:'17:00',name:'Fushimi Inari Taisha / 伏见稻荷大社',emoji:'⛩️',cat:'景点',addr:'68 Fukakusa Yabunouchicho, Fushimi Ward, Kyoto',lat:34.96714,lng:135.77267,desc:'傍晚参观千本鸟居，游客比白天少一些。',tips:['只走前半段即可','不用爬完整座山'],gmap:'https://www.google.com/maps/search/?api=1&query=Fushimi+Inari+Taisha'},
+{time:'18:30',name:'Yasaka Shrine / 八坂神社',emoji:'🏮',cat:'夜景',addr:'625 Gionmachi Kitagawa, Higashiyama Ward, Kyoto',lat:35.00372,lng:135.77886,desc:'傍晚到夜晚灯笼亮起后很有京都氛围。',tips:['适合蓝调时刻拍照','之后顺路去花见小路'],gmap:'https://www.google.com/maps/search/?api=1&query=Yasaka+Shrine+Kyoto'},
+{time:'19:00',name:'Hanamikoji Street / 花见小路',emoji:'🌃',cat:'夜景',addr:'Gion, Higashiyama Ward, Kyoto',lat:35.00325,lng:135.77572,desc:'祇园经典石板路，适合夜晚散步。',tips:['注意安静，不要打扰当地居民和店家'],gmap:'https://www.google.com/maps/search/?api=1&query=Hanamikoji+Street'},
+{time:'19:40',name:'Shirakawa Minami Dori / 白川南通',emoji:'🌙',cat:'夜景',addr:'Gion Shirakawa, Kyoto',lat:35.00601,lng:135.77557,desc:'比花见小路更安静的夜景路线，河边灯光很适合拍照。',tips:['很适合慢慢走','夜景氛围好'],gmap:'https://www.google.com/maps/search/?api=1&query=Gion+Shirakawa+Kyoto'},
+{time:'20:10',name:'Kamo River / 鸭川',emoji:'🌉',cat:'夜景',addr:'Shijo Ohashi, Kyoto',lat:35.00383,lng:135.77155,desc:'在四条大桥附近看鸭川夜景，作为当天收尾。',tips:['可以顺便找晚饭或甜品','注意回民宿交通时间'],gmap:'https://www.google.com/maps/search/?api=1&query=Kamo+River+Shijo+Kyoto'},
+{time:'21:30',name:'Return Kyoto Stay / 返回北白川民宿',emoji:'🏡',cat:'返程',addr:'Gion/Shijo → 31-5 Kitashirakawa Yamadacho',lat:35.031,lng:135.794,desc:'从祇园/四条区域返回北白川民宿。建议21:30左右回程，避免太晚。',tips:['可选择公交或打车','如果购物较多建议打车回去'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Gion+Kyoto&destination=31-5+Kitashirakawa+Yamadacho+Kyoto&travelmode=transit'}
+]},{date:'7/3',title:'Arashiyama Day',note:'07:45民宿出发，09:30岚山小火车，岚山一日慢游，晚上清水寺与祇园夜景',stops:[
+{time:'07:45',name:'Kyoto Stay / 北白川民宿出发',emoji:'🏡',cat:'住宿',addr:'31-5 Kitashirakawa Yamadacho, Sakyo Ward, Kyoto 606-8272',lat:35.031,lng:135.794,desc:'建议07:45从民宿出发，前往龟冈方向赶09:30岚山小火车。',tips:['务必提前出发','目标是09:10前到Torokko Kameoka附近','带好电子车票'],gmap:'https://www.google.com/maps/dir/?api=1&origin=31-5+Kitashirakawa+Yamadacho+Kyoto&destination=Torokko+Kameoka+Station&travelmode=transit'},
+{time:'07:45–09:15',name:'Kyoto Stay → Torokko Kameoka / 前往龟冈小火车站',emoji:'🚆',cat:'交通',addr:'Kyoto → Torokko Kameoka',lat:35.031,lng:135.794,desc:'从北白川民宿出发，经京都站/JR马堀站方向前往Torokko Kameoka。预留约1小时30分钟以上更稳妥。',tips:['实时查询Google Maps换乘','宁可早到不要卡点','JR马堀站到小火车龟冈站需步行'],gmap:'https://www.google.com/maps/dir/?api=1&origin=31-5+Kitashirakawa+Yamadacho+Kyoto&destination=Torokko+Kameoka+Station&travelmode=transit'},
+{time:'09:30',name:'Sagano Romantic Train Ticket / 岚山小火车电子车票',emoji:'🚂',cat:'车票',addr:'Torokko Kameoka → Torokko Arashiyama',lat:35.0132,lng:135.6107,desc:'已预订09:30龟冈到岚山的小火车。点击下方按钮打开电子车票。',tips:['提前打开车票页面','建议截图备份','龟冈→岚山方向可留意保津川景色'],gmap:'https://t.linktivity.io/issueticket/sagano-kanko/tHCx6W72tisyvPQw/ARS_SAGANO_KANKO-20260621-9CFP?lang=ZH',linkLabel:'打开电子车票'},
+{time:'10:00',name:'Arashiyama Bamboo Grove / 竹林小径',emoji:'🎋',cat:'景点',addr:'Arashiyama, Kyoto',lat:35.01704,lng:135.67124,desc:'小火车到达后先去竹林小径，越早人越少。',tips:['先去竹林再逛商业街','适合拍照'],gmap:'https://www.google.com/maps/search/?api=1&query=Arashiyama+Bamboo+Grove'},
+{time:'10:45–12:00',name:'Yusai-tei / 佑斋亭',emoji:'🏯',cat:'景点',addr:'Arashiyama, Kyoto',lat:35.01611,lng:135.66931,desc:'著名倒影拍照点，适合慢慢拍照和休息。',tips:['建议提前确认预约或开放情况','预留足够拍照时间'],gmap:'https://www.google.com/maps/search/?api=1&query=Yusai-tei+Kyoto'},
+{time:'12:00–13:00',name:'Lunch in Arashiyama / 岚山午餐',emoji:'🍱',cat:'午餐',addr:'Arashiyama, Kyoto',lat:35.0152,lng:135.6758,desc:'在岚山区域午餐。可选嵯峨野湯、五木茶屋，或临场选择商业街附近餐厅。',tips:['人多时不要执着一家店','下午还要逛很多店'],gmap:'https://www.google.com/maps/search/?api=1&query=Arashiyama+lunch'},
+{time:'13:00',name:'Togetsukyo Bridge / 渡月桥',emoji:'🌉',cat:'景点',addr:'Arashiyama, Kyoto',lat:35.01356,lng:135.67778,desc:'岚山经典地标，河边适合散步和拍照。',tips:['桥上人多，河边更好拍'],gmap:'https://www.google.com/maps/search/?api=1&query=Togetsukyo+Bridge'},
+{time:'13:40',name:'Miffy Sakura Kitchen Arashiyama',emoji:'🐰',cat:'购物',addr:'Arashiyama, Kyoto',lat:35.01508,lng:135.67718,desc:'岚山商业街重点店之一，适合购买Miffy主题点心和周边。',tips:['人气较高，建议先逛'],gmap:'https://www.google.com/maps/search/?api=1&query=Miffy+Sakura+Kitchen+Arashiyama'},
+{time:'14:15',name:'Kyoto Baum Arashiyama',emoji:'🍰',cat:'伴手礼',addr:'Arashiyama, Kyoto',lat:35.01515,lng:135.6776,desc:'京都年轮蛋糕伴手礼店，适合带回去。',tips:['适合买伴手礼','注意保存和携带'],gmap:'https://www.google.com/maps/search/?api=1&query=Kyoto+Baum+Arashiyama'},
+{time:'14:50',name:'Rilakkuma Tea House Arashiyama / Rilakkuma茶房',emoji:'🐻',cat:'咖啡/购物',addr:'Arashiyama, Kyoto',lat:35.01538,lng:135.67787,desc:'非常适合拍照和买角色周边，也可以作为下午休息点。',tips:['适合下午茶','周边可慢慢看'],gmap:'https://www.google.com/maps/search/?api=1&query=Rilakkuma+Tea+House+Arashiyama'},
+{time:'15:40',name:'Snoopy Chocolat Arashiyama',emoji:'🍫',cat:'购物',addr:'Arashiyama, Kyoto',lat:35.01561,lng:135.67816,desc:'Snoopy主题巧克力和甜品店，适合买小礼物。',tips:['适合拍照和买伴手礼'],gmap:'https://www.google.com/maps/search/?api=1&query=Snoopy+Chocolat+Arashiyama'},
+{time:'16:20',name:'% Arabica Kyoto Arashiyama',emoji:'☕',cat:'咖啡',addr:'Arashiyama, Kyoto',lat:35.01292,lng:135.67667,desc:'岚山河边咖啡店，作为离开岚山前的休息点很合适。',tips:['人多时可外带','河边景色很好'],gmap:'https://www.google.com/maps/search/?api=1&query=%25+Arabica+Kyoto+Arashiyama'},
+{time:'17:00–18:00',name:'Arashiyama → Kiyomizu Area / 前往清水寺区域',emoji:'🚆',cat:'交通',addr:'Arashiyama → Kiyomizu-dera',lat:35.0152,lng:135.677,desc:'从岚山前往清水寺/东山区域，准备看傍晚和夜景。',tips:['如果当天很累，可改成直接回民宿','注意清水寺实际开放时间'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Arashiyama+Station&destination=Kiyomizu-dera&travelmode=transit'},
+{time:'18:00',name:'Kiyomizu-dera / 清水寺',emoji:'🏯',cat:'夜景',addr:'1-294 Kiyomizu, Higashiyama Ward, Kyoto',lat:34.99486,lng:135.78503,desc:'傍晚游览清水寺区域。如果当日没有夜间特别开放，则以外围、二年坂三年坂和东山夜景为主。',tips:['确认当日开放时间','傍晚光线最美'],gmap:'https://www.google.com/maps/search/?api=1&query=Kiyomizudera'},
+{time:'19:00',name:'Ninenzaka & Sannenzaka / 二年坂三年坂',emoji:'🏮',cat:'夜景',addr:'Higashiyama Ward, Kyoto',lat:34.99704,lng:135.78092,desc:'京都经典石板路夜景，从清水寺往祇园方向慢慢走。',tips:['适合拍照','小店可能陆续关门，重点看夜景'],gmap:'https://www.google.com/maps/search/?api=1&query=Ninenzaka+Sannenzaka'},
+{time:'20:00',name:'Yasaka Shrine Night / 八坂神社夜景',emoji:'🌃',cat:'夜景',addr:'625 Gionmachi Kitagawa, Higashiyama Ward, Kyoto',lat:35.00372,lng:135.77886,desc:'八坂神社夜景收尾，然后返回北白川民宿。',tips:['不要太晚离开','21:00左右回到民宿最稳'],gmap:'https://www.google.com/maps/search/?api=1&query=Yasaka+Shrine+Kyoto'},
+{time:'20:30–21:00',name:'Return Kyoto Stay / 返回北白川民宿',emoji:'🏡',cat:'返程',addr:'Yasaka Shrine → 31-5 Kitashirakawa Yamadacho',lat:35.031,lng:135.794,desc:'从八坂神社/祇园区域返回北白川民宿。建议20:30左右开始回程，避免太晚。',tips:['可公交或打车','如果买了很多东西建议打车','这个时间不用担心末班车'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Yasaka+Shrine+Kyoto&destination=31-5+Kitashirakawa+Yamadacho+Kyoto&travelmode=transit'}
+]},{date:'7/4',title:'Kyoto Morning → Tokyo · Asakusa · Akihabara/Ginza Shopping',note:'早上银阁寺与哲学之道短线，随后回东京；下午浅草寺与美食，傍晚秋叶原和银座购物',stops:[
+{time:'08:30',name:'Kyoto Stay / 北白川民宿出发',emoji:'🏡',cat:'住宿',addr:'31-5 Kitashirakawa Yamadacho, Sakyo Ward, Kyoto 606-8272',lat:35.031,lng:135.794,desc:'从北白川民宿出发，先去附近的银阁寺和哲学之道。',tips:['行李可先寄存在民宿或带去京都站寄存','这天不要在京都停留太久'],gmap:'https://www.google.com/maps/search/?api=1&query=31-5+Kitashirakawa+Yamadacho+Kyoto'},
+{time:'08:45–09:45',name:'Ginkaku-ji / 银阁寺',emoji:'🏯',cat:'寺院',addr:'2 Ginkakujicho, Sakyo Ward, Kyoto',lat:35.0270,lng:135.7982,desc:'离民宿很近，早上短暂停留即可。不需要提前购票，现场买票进入。',tips:['现场购票即可','建议控制在45–60分钟'],gmap:'https://www.google.com/maps/search/?api=1&query=Ginkakuji+Kyoto'},
+{time:'09:45–10:20',name:'Philosopher’s Path / 哲学之道',emoji:'🌿',cat:'散步',addr:'Sakyo Ward, Kyoto',lat:35.0250,lng:135.7950,desc:'从银阁寺附近简单走一段哲学之道，感受氛围即可，不走完全程。',tips:['走一小段即可','不要拖到太晚'],gmap:'https://www.google.com/maps/search/?api=1&query=Philosopher%27s+Path+Kyoto'},
+{time:'10:30–11:10',name:'To Kyoto Station / 前往京都站',emoji:'🚕',cat:'交通',addr:'Ginkakuji Area → Kyoto Station',lat:35.0270,lng:135.7982,desc:'从银阁寺区域前往京都站，取行李并准备搭新干线回东京。',tips:['如果带行李建议打车','京都站可买便当'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Ginkakuji+Kyoto&destination=Kyoto+Station&travelmode=transit'},
+{time:'11:30–13:45',name:'Shinkansen Kyoto → Tokyo / 新干线回东京',emoji:'🚅',cat:'交通',addr:'Kyoto Station → Tokyo Station',lat:34.9858,lng:135.7588,desc:'中午从京都搭新干线回东京。东京酒店未定，可先按东京站/银座/日本桥区域规划。',tips:['建议选东京站/银座/日本桥附近酒店','方便7/4购物和7/6去成田'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station&destination=Tokyo+Station&travelmode=transit'},
+{time:'14:30–16:30',name:'Senso-ji & Asakusa Food / 浅草寺及周边美食',emoji:'🏮',cat:'景点/美食',addr:'Asakusa, Tokyo',lat:35.7148,lng:139.7967,desc:'下午安排浅草寺、雷门、仲见世通和周边小吃。',tips:['浅草寺境内可逛','仲见世适合买小点心','适合吃人形烧、炸馒头、抹茶甜品'],gmap:'https://www.google.com/maps/search/?api=1&query=Sensoji+Asakusa'},
+{time:'17:00–18:45',name:'Akihabara Shopping / 秋叶原动漫购物',emoji:'🎮',cat:'购物',addr:'Akihabara, Tokyo',lat:35.6984,lng:139.7730,desc:'回东京后继续秋叶原动漫谷子、手办、扭蛋、药妆和电器周边。',tips:['重点买动漫谷子','别买太重，后面7/6还有最后补货'],gmap:'https://www.google.com/maps/search/?api=1&query=Akihabara+Tokyo'},
+{time:'19:00–21:00',name:'Ginza Jewelry / Fashion / Vintage Shops',emoji:'👜',cat:'购物区域',addr:'Ginza, Tokyo',lat:35.6719,lng:139.7650,desc:'银座购物主场：首饰、裙装、中古包包。下列店铺都作为地图标识，不一定全部进入。',tips:['重点看包包和首饰','可把想买的留到7/6最后确认'],gmap:'https://www.google.com/maps/search/?api=1&query=Ginza+shopping'},
+{time:'19:05',name:'COCOSHNIK Ginza',emoji:'💍',cat:'首饰',addr:'Ginza, Tokyo',lat:35.6727,lng:139.7652,desc:'日系精致首饰标记点。',tips:['适合戒指、项链、耳饰'],gmap:'https://www.google.com/maps/search/?api=1&query=COCOSHNIK+Ginza'},
+{time:'19:10',name:'agete Ginza',emoji:'💎',cat:'首饰',addr:'Ginza, Tokyo',lat:35.6722,lng:139.7653,desc:'日系首饰标记点。',tips:['适合慢慢试戴'],gmap:'https://www.google.com/maps/search/?api=1&query=agete+Ginza'},
+{time:'19:15',name:'SNIDEL Ginza',emoji:'👗',cat:'服饰',addr:'Ginza, Tokyo',lat:35.6724,lng:139.7648,desc:'日系裙装和服饰。',tips:['看裙装和上衣'],gmap:'https://www.google.com/maps/search/?api=1&query=SNIDEL+Ginza'},
+{time:'19:20',name:'Orange Boutique Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6714,lng:139.7649,desc:'中古包包店标识。',tips:['重点看包况和价格'],gmap:'https://www.google.com/maps/search/?api=1&query=Orange+Boutique+Ginza'},
+{time:'19:25',name:'BRAND OFF Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6718,lng:139.7651,desc:'中古精品店标识。',tips:['适合看包包和饰品'],gmap:'https://www.google.com/maps/search/?api=1&query=BRAND+OFF+Ginza'},
+{time:'19:30',name:'ALLU Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6721,lng:139.7646,desc:'中古精品店标识。',tips:['可重点看包和腕表'],gmap:'https://www.google.com/maps/search/?api=1&query=ALLU+Ginza'},
+{time:'19:35',name:'CO&CO Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6720,lng:139.7657,desc:'中古店标识。',tips:['作为备选标记'],gmap:'https://www.google.com/maps/search/?api=1&query=CO+CO+Ginza+vintage'},
+{time:'19:40',name:'RT Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6716,lng:139.7643,desc:'中古店标识。',tips:['作为备选标记'],gmap:'https://www.google.com/maps/search/?api=1&query=RT+Ginza+vintage'},
+{time:'19:45',name:'KOMEHYO Ginza / KOMEHYO 银座店',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6709,lng:139.7654,desc:'大型中古精品店，适合重点看包包、珠宝和腕表。',tips:['重点候选','适合最后比价'],gmap:'https://www.google.com/maps/search/?api=1&query=KOMEHYO+Ginza'},
+{time:'21:15',name:'Return Tokyo Hotel / 返回东京酒店',emoji:'🏨',cat:'返程',addr:'Ginza → Tokyo Hotel',lat:35.6812,lng:139.7671,desc:'返回东京酒店。酒店建议优先选东京站/银座/日本桥一带。',tips:['方便7/6去成田','也方便银座购物'],gmap:'https://www.google.com/maps/search/?api=1&query=Tokyo+Station+Hotel+Area'}
+]},{date:'7/5',title:'Koala + Kamakura + Enoshima',note:'横滨金泽动物园考拉、镰仓海景与江之岛慢游',stops:[
+{time:'08:00',name:'Tokyo Hotel Departure',emoji:'🏨',cat:'酒店',addr:'Tokyo',lat:35.6812,lng:139.7671,desc:'从东京酒店出发前往横滨金泽动物园。',tips:['建议早点出发'],gmap:'https://www.google.com/maps/search/?api=1&query=Tokyo+Station'},
+{time:'09:30',name:'Kanazawa Zoological Gardens',emoji:'🐨',cat:'考拉',addr:'Yokohama',lat:35.363,lng:139.618,desc:'重点看考拉并购买考拉周边。',tips:['预留周边购买时间'],gmap:'https://www.google.com/maps/search/?api=1&query=Kanazawa+Zoological+Gardens'},
+{time:'10:45',name:'Koala Souvenir Shop',emoji:'🛍️',cat:'购物',addr:'Zoo Gift Shop',lat:35.363,lng:139.618,desc:'购买考拉玩偶、钥匙扣等周边。',tips:['离园前购买'],gmap:'https://www.google.com/maps/search/?api=1&query=Kanazawa+Zoological+Gardens+gift+shop'},
+{time:'11:30',name:'Taxi to Kamakura',emoji:'🚕',cat:'交通',addr:'Yokohama → Kamakura',lat:35.363,lng:139.618,desc:'打车前往镰仓，约35–45分钟。',tips:['比公共交通轻松'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Kanazawa+Zoological+Gardens&destination=Kamakura'},
+{time:'12:15',name:'Hasedera Temple',emoji:'🏯',cat:'景点',addr:'Kamakura',lat:35.3129,lng:139.5332,desc:'镰仓最值得的寺院之一。',tips:['海景和庭园'],gmap:'https://www.google.com/maps/search/?api=1&query=Hasedera+Kamakura'},
+{time:'13:15',name:'Lunch Near Hasedera',emoji:'🍜',cat:'午餐',addr:'Hase Area',lat:35.313,lng:139.534,desc:'长谷寺附近简单午餐，不特意安排网红店。',tips:['吃完继续海边路线'],gmap:'https://www.google.com/maps/search/?api=1&query=Hase+Kamakura+Restaurant'},
+{time:'14:15',name:'Kamakurakokomae Station',emoji:'🚋',cat:'打卡',addr:'Kamakura',lat:35.3089,lng:139.5009,desc:'灌篮高手经典场景。',tips:['注意来往车辆'],gmap:'https://www.google.com/maps/search/?api=1&query=Kamakurakokomae+Station'},
+{time:'15:00',name:'Shichirigahama Beach',emoji:'🌊',cat:'海景',addr:'Kamakura',lat:35.304,lng:139.516,desc:'预留更多时间看海、江之电和富士山。',tips:['天气好可见富士山','适合发呆拍照'],gmap:'https://www.google.com/maps/search/?api=1&query=Shichirigahama+Beach'},
+{time:'16:45',name:'Enoshima Old Street',emoji:'🏝️',cat:'老街',addr:'Enoshima',lat:35.2996,lng:139.4807,desc:'提前进入江之岛，慢慢逛老街、参道、杂货店和海景。',tips:['章鱼仙贝','江岛神社参道','贝壳杂货'],gmap:'https://www.google.com/maps/search/?api=1&query=Enoshima'},
+
+{time:'16:50',name:'Tobiccho Main Shop (Take Queue Number)',emoji:'🎟️',cat:'晚餐取号',addr:'Enoshima',lat:35.3004,lng:139.4817,desc:'到岛后先取号，再去逛老街和神社。',tips:['17:00左右取号最稳'],gmap:'https://www.google.com/maps/search/?api=1&query=Tobiccho+Main+Shop'},
+{time:'17:10',name:'LONCAFE Enoshima',emoji:'☕',cat:'咖啡',addr:'Enoshima',lat:35.3008,lng:139.4823,desc:'Sea Candle附近法式吐司咖啡馆。',tips:['可作为休息点'],gmap:'https://www.google.com/maps/search/?api=1&query=LONCAFE+Enoshima'},
+{time:'18:20',name:'Enoshima Uomi-tei',emoji:'🐟',cat:'备用晚餐',addr:'Enoshima',lat:35.2999,lng:139.4832,desc:'海景很强的海鲜餐厅。',tips:['Tobiccho排队过长时备用'],gmap:'https://www.google.com/maps/search/?api=1&query=Enoshima+Uomi-tei'},
+{time:'18:21',name:'Tobiccho Bentenmaru',emoji:'🐟',cat:'备用晚餐',addr:'Enoshima',lat:35.3001,lng:139.4815,desc:'Tobiccho分店。',tips:['排队通常较短'],gmap:'https://www.google.com/maps/search/?api=1&query=Tobiccho+Bentenmaru'},
+{time:'18:22',name:'Kaisen Ryori Uoharu',emoji:'🐟',cat:'备用晚餐',addr:'Enoshima',lat:35.3002,lng:139.4820,desc:'综合海鲜料理。',tips:['不只吃吻仔鱼'],gmap:'https://www.google.com/maps/search/?api=1&query=Kaisen+Ryori+Uoharu'},
+
+{time:'18:30',name:'Tobiccho Main Shop',emoji:'🐟',cat:'晚餐',addr:'Enoshima',lat:35.3004,lng:139.4817,desc:'生吻仔鱼盖饭晚餐。',tips:['推荐生+釜扬双拼'],gmap:'https://www.google.com/maps/search/?api=1&query=Tobiccho+Main+Shop'},
+{time:'19:00',name:'Enoshima Sunset View',emoji:'🌅',cat:'夕阳',addr:'Enoshima',lat:35.2996,lng:139.4807,desc:'欣赏江之岛夕阳与富士山景色。',tips:['天气好时非常值得'],gmap:'https://www.google.com/maps/search/?api=1&query=Enoshima+sunset'},
+{time:'20:00',name:'Return to Tokyo',emoji:'🚆',cat:'返程',addr:'Enoshima → Tokyo',lat:35.2996,lng:139.4807,desc:'返回东京酒店。',tips:['约21:30到达'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Enoshima&destination=Tokyo+Station'},
+{time:'21:30',name:'Tokyo Hotel',emoji:'🏨',cat:'酒店',addr:'Tokyo',lat:35.6812,lng:139.7671,desc:'结束镰仓一日游。',tips:['整理战利品'],gmap:'https://www.google.com/maps/search/?api=1&query=Tokyo+Station'}
+]},{date:'7/6',title:'Tokyo Final Shopping → Narita',note:'最后购物补货：银座中古/首饰/服饰 + 秋叶原动漫谷子 + 药妆；16:25 成田返航',stops:[
+{time:'09:30',name:'Tokyo Hotel Check-out / 东京酒店退房',emoji:'🏨',cat:'酒店',addr:'Tokyo Station / Ginza / Nihonbashi Area',lat:35.6812,lng:139.7671,desc:'退房并寄存行李。酒店建议选择东京站、银座或日本桥区域，方便购物和去成田。',tips:['确认酒店行李寄存','护照和机场文件随身带'],gmap:'https://www.google.com/maps/search/?api=1&query=Tokyo+Station+Hotel'},
+{time:'10:00–12:15',name:'Ginza Final Shopping / 银座最后购物',emoji:'👜',cat:'购物区域',addr:'Ginza, Tokyo',lat:35.6719,lng:139.7650,desc:'最后集中买包包、首饰、裙装和中古店。',tips:['重点比价','确认免税手续','不要买太晚'],gmap:'https://www.google.com/maps/search/?api=1&query=Ginza+shopping'},
+{time:'10:05',name:'COCOSHNIK Ginza',emoji:'💍',cat:'首饰',addr:'Ginza, Tokyo',lat:35.6727,lng:139.7652,desc:'最后确认首饰款式。',tips:['喜欢就买，不然后面时间有限'],gmap:'https://www.google.com/maps/search/?api=1&query=COCOSHNIK+Ginza'},
+{time:'10:10',name:'agete Ginza',emoji:'💎',cat:'首饰',addr:'Ginza, Tokyo',lat:35.6722,lng:139.7653,desc:'日系首饰最后补货。',tips:['注意免税门槛'],gmap:'https://www.google.com/maps/search/?api=1&query=agete+Ginza'},
+{time:'10:15',name:'SNIDEL Ginza',emoji:'👗',cat:'服饰',addr:'Ginza, Tokyo',lat:35.6724,lng:139.7648,desc:'裙装和日系服饰。',tips:['留意行李空间'],gmap:'https://www.google.com/maps/search/?api=1&query=SNIDEL+Ginza'},
+{time:'10:20',name:'Orange Boutique Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6714,lng:139.7649,desc:'中古包包店标识。',tips:['看包况'],gmap:'https://www.google.com/maps/search/?api=1&query=Orange+Boutique+Ginza'},
+{time:'10:25',name:'BRAND OFF Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6718,lng:139.7651,desc:'中古精品店标识。',tips:['可比价'],gmap:'https://www.google.com/maps/search/?api=1&query=BRAND+OFF+Ginza'},
+{time:'10:30',name:'ALLU Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6721,lng:139.7646,desc:'中古精品店标识。',tips:['包包和腕表'],gmap:'https://www.google.com/maps/search/?api=1&query=ALLU+Ginza'},
+{time:'10:35',name:'CO&CO Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6720,lng:139.7657,desc:'中古店标识。',tips:['备选'],gmap:'https://www.google.com/maps/search/?api=1&query=CO+CO+Ginza+vintage'},
+{time:'10:40',name:'RT Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6716,lng:139.7643,desc:'中古店标识。',tips:['备选'],gmap:'https://www.google.com/maps/search/?api=1&query=RT+Ginza+vintage'},
+{time:'10:45',name:'KOMEHYO Ginza',emoji:'👜',cat:'中古店',addr:'Ginza, Tokyo',lat:35.6709,lng:139.7654,desc:'大型中古精品店，适合最后决定包包。',tips:['重点候选'],gmap:'https://www.google.com/maps/search/?api=1&query=KOMEHYO+Ginza'},
+{time:'12:15–13:00',name:'Akihabara Quick Final Stop / 秋叶原最后补货',emoji:'🎮',cat:'购物',addr:'Akihabara, Tokyo',lat:35.6984,lng:139.7730,desc:'如果银座结束得早，可以去秋叶原快速补买动漫谷子。若时间紧则直接跳过。',tips:['可跳过','不要影响去机场'],gmap:'https://www.google.com/maps/search/?api=1&query=Akihabara+Tokyo'},
+{time:'13:00',name:'Return Hotel & Pick Up Luggage / 回酒店取行李',emoji:'🧳',cat:'行李',addr:'Tokyo Hotel',lat:35.6812,lng:139.7671,desc:'回酒店取行李，准备出发去成田机场。',tips:['13:00左右开始去机场最稳','不要卡点'],gmap:'https://www.google.com/maps/search/?api=1&query=Tokyo+Station'},
+{time:'13:20–14:30',name:'Tokyo → Narita Airport / 前往成田机场',emoji:'🚆',cat:'机场交通',addr:'Tokyo → Narita Airport',lat:35.6812,lng:139.7671,desc:'建议搭 Narita Express 或其他机场交通前往成田。16:25航班，建议14:30左右到机场。',tips:['国际航班建议提前到机场','如果购物退税多，预留更多时间'],gmap:'https://www.google.com/maps/dir/?api=1&origin=Tokyo+Station&destination=Narita+Airport&travelmode=transit'},
+{time:'16:25',name:'Flight from Narita / 成田返航',emoji:'✈️',cat:'航班',addr:'Narita Airport',lat:35.7720,lng:140.3929,desc:'16:25 从成田机场返航。',tips:['确认航站楼','提前办理值机和退税'],gmap:'https://www.google.com/maps/search/?api=1&query=Narita+Airport'}
+]}
+];
+let map, layerGroup, routeLine, currentDay=1;
+const STORAGE_KEY='japanTripDashboardStatusV1';
+let statusState=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+function stopId(dayIdx, stopIdx){return `day${dayIdx}_stop${stopIdx}`;}
+function getStatus(dayIdx, stopIdx){return statusState[stopId(dayIdx,stopIdx)] || {fav:false,done:false};}
+function setStatus(dayIdx, stopIdx, patch){const id=stopId(dayIdx,stopIdx); statusState[id]={...getStatus(dayIdx,stopIdx),...patch}; localStorage.setItem(STORAGE_KEY,JSON.stringify(statusState));}
+function toggleFav(dayIdx, stopIdx, ev){if(ev) ev.stopPropagation(); const st=getStatus(dayIdx,stopIdx); setStatus(dayIdx,stopIdx,{fav:!st.fav}); renderDay(currentDay); focusStop(stopIdx,false);}
+function toggleDone(dayIdx, stopIdx, ev){if(ev) ev.stopPropagation(); const st=getStatus(dayIdx,stopIdx); setStatus(dayIdx,stopIdx,{done:!st.done}); renderDay(currentDay); focusStop(stopIdx,false);}
+function updateStatusSummary(){let fav=0,done=0; Object.values(statusState).forEach(v=>{if(v.fav) fav++; if(v.done) done++;}); const el=document.getElementById('statusSummary'); if(el) el.innerHTML=`⭐ 收藏：${fav}<br>✓ 已打卡：${done}`;}
+function mkIcon(i){return L.divIcon({className:'',html:`<div class="num-icon">${i}</div>`,iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-16]});}
+function routeUrl(stops){const travelStops=stops.filter(s=>!s.cat.includes('晚餐候选') && s.name.indexOf('Satou')<0); const origin=encodeURIComponent(travelStops[0].name); const dest=encodeURIComponent(travelStops[travelStops.length-1].name); const mids=travelStops.slice(1,-1); const way=mids.slice(0,8).map(s=>encodeURIComponent(s.name)).join('%7C'); return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}${way?`&waypoints=${way}`:''}&travelmode=transit`;}
+function init(){map=L.map('map',{scrollWheelZoom:true, touchZoom:true, doubleClickZoom:true, boxZoom:true}).setView([35.69,139.62],11);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);layerGroup=L.layerGroup().addTo(map); renderDayList(); renderDay(1); setTimeout(()=>map.invalidateSize(),200)}
+function renderDayList(){document.getElementById('dayList').innerHTML=days.map((d,i)=>`<button class="daybtn ${i===currentDay?'active':''}" onclick="renderDay(${i})"><b>Day ${i+1} · ${d.date}</b><small>${d.title}</small></button>`).join(''); updateStatusSummary();}
+function renderDay(i){currentDay=i; const tb=document.getElementById('ticketBtn'); if(tb) tb.classList.remove('active'); renderDayList(); const d=days[i]; document.getElementById('title').textContent=`Day ${i+1} · ${d.date} · ${d.title}`; document.getElementById('summary').textContent=d.note; document.getElementById('stopCount').textContent=d.stops.length?`${d.stops.length} 个地点`:'空白预留'; layerGroup.clearLayers(); if(routeLine){map.removeLayer(routeLine)};
+ const tl=document.getElementById('timeline'); const detail=document.getElementById('detail'); const full=document.getElementById('fullRoute');
+ if(!d.stops.length){tl.innerHTML='<div class="empty">这一天先留空，后面讨论后可以直接添加路线、地点和餐厅。</div>'; detail.innerHTML='<h2>待规划</h2><p class="desc">预留给后续行程。</p>'; full.href='#'; full.textContent='待添加路线'; map.setView([35.681,139.767],11); return;}
+ full.href=routeUrl(d.stops); full.textContent='在 Google Maps 打开整日路线';
+ tl.innerHTML=d.stops.map((s,idx)=>{ const st=getStatus(currentDay,idx); return `<div class="stop" id="stop-${idx}" onclick="focusStop(${idx},true)"><div class="time">${s.time}</div><div class="stop-card ${st.done?'done':''}"><h3>${s.emoji} ${s.name} <span class="small-status">${st.fav?'⭐':''}${st.done?' ✓':''}</span></h3><div class="meta">${s.cat} · ${s.addr}</div><p class="desc">${s.desc}</p><div class="actions"><button class="btn ${st.fav?'active':''}" onclick="toggleFav(${currentDay},${idx},event)">${st.fav?'★ 已收藏':'☆ 收藏'}</button><button class="btn ${st.done?'done':''}" onclick="toggleDone(${currentDay},${idx},event)">${st.done?'✓ 已打卡':'○ 打卡'}</button><a class="btn" onclick="event.stopPropagation()" target="_blank" href="${s.gmap}">${s.linkLabel || 'Google Maps'}</a><a class="btn" onclick="event.stopPropagation()" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(s.name)}">导航到这里</a></div></div></div>`}).join('');
+ const pts=[]; d.stops.forEach((s,idx)=>{ const marker=L.marker([s.lat,s.lng],{icon:mkIcon(idx+1)}).addTo(layerGroup); marker.bindPopup(`<b>${s.emoji} ${s.name}</b><br>${s.time}<br><span style="color:#7a6e61">${s.addr}</span><br><a href="${s.gmap}" target="_blank">Open in Google Maps</a>`); marker.on('click',()=>focusStop(idx,true)); if(!s.cat.includes('晚餐候选') && s.name.indexOf('Satou')<0) pts.push([s.lat,s.lng]); });
+ routeLine=L.polyline(pts,{weight:4,opacity:.75,dashArray:'8 8'}).addTo(map); const bounds=L.latLngBounds(d.stops.map(s=>[s.lat,s.lng])); map.fitBounds(bounds.pad(.18)); focusStop(0,false); setTimeout(()=>map.invalidateSize(),200);}
+function focusStop(idx,scroll){const d=days[currentDay]; const s=d.stops[idx]; document.querySelectorAll('.stop').forEach(el=>el.classList.remove('active')); const el=document.getElementById(`stop-${idx}`); if(el) el.classList.add('active'); map.setView([s.lat,s.lng], Math.max(map.getZoom(), 14), {animate:true}); const st=getStatus(currentDay,idx); detail.innerHTML=`<h2>${s.emoji} ${s.name} ${st.fav?'<span class="status-badge">⭐ 收藏</span>':''} ${st.done?'<span class="status-badge done">✓ 已打卡</span>':''}</h2><div class="meta">${s.time} · ${s.cat}<br>${s.addr}</div><p class="desc">${s.desc}</p><div class="status-row"><button class="btn ${st.fav?'active':''}" onclick="toggleFav(${currentDay},${idx},event)">${st.fav?'★ 取消收藏':'☆ 加入收藏'}</button><button class="btn ${st.done?'done':''}" onclick="toggleDone(${currentDay},${idx},event)">${st.done?'✓ 取消打卡':'○ 标记已完成'}</button></div><div class="detail-grid"><div class="infobox"><b>建议动作</b>${(s.tips||[]).map(t=>'• '+t).join('<br>')}</div><div class="infobox"><b>链接</b><a class="btn" target="_blank" href="${s.gmap}">${s.linkLabel || '打开 Google Maps'}</a></div><div class="infobox"><b>当天衔接</b>右侧时间轴可独立滑动；左侧地图会固定保留，方便对照路线。</div></div>`; if(scroll){ const sc=document.getElementById('timelineScroll'); const active=document.getElementById(`stop-${idx}`); if(sc && active){ active.scrollIntoView({behavior:'smooth',block:'center',inline:'nearest'}); } }}
+
+function renderTickets(){
+  currentDay=-1;
+  renderDayList();
+  const btn=document.getElementById('ticketBtn');
+  if(btn) btn.classList.add('active');
+  document.getElementById('title').textContent='🎫 车票 / 门票专区';
+  document.getElementById('summary').textContent='提前购票检查、交通票链接、门票提醒和专题收藏。点击任意日期后会切换回当天地图和时间轴。';
+  document.getElementById('stopCount').textContent='总控板块';
+  if(layerGroup) layerGroup.clearLayers();
+  if(routeLine){map.removeLayer(routeLine); routeLine=null;}
+  document.getElementById('fullRoute').href='#';
+  document.getElementById('fullRoute').textContent='票券总览';
+  document.getElementById('timeline').innerHTML=document.getElementById('ticketTemplate').innerHTML;
+  document.getElementById('detail').innerHTML='<h2>使用方式</h2><p class="desc">这个板块只在左侧点击“车票 / 门票专区”时显示。点击任意日期后，它会消失，并恢复当天路线地图、Marker 和时间轴。</p>';
+  map.setView([35.3,137.8],6);
+}
+
+
+/* ===== V18 mobile/editable enhancements ===== */
+const CUSTOM_DAYS_KEY='japanTripCustomDaysV18';
+const EXTRA_TICKETS_KEY='japanTripExtraTicketsV18';
+const COLLECTION_NOTES_KEY='japanTripCollectionNotesV18';
+
+function saveCustomDays(){
+  localStorage.setItem(CUSTOM_DAYS_KEY, JSON.stringify(days));
+}
+function loadCustomDays(){
+  try{
+    const raw=localStorage.getItem(CUSTOM_DAYS_KEY);
+    if(raw){
+      const saved=JSON.parse(raw);
+      if(Array.isArray(saved) && saved.length===days.length){
+        for(let i=0;i<days.length;i++){
+          if(saved[i] && saved[i].date===days[i].date && Array.isArray(saved[i].stops)){
+            days[i]=saved[i];
+          }
+        }
+      }
+    }
+  }catch(e){}
+}
+function safeQuery(s){return encodeURIComponent(s||'');}
+function segmentUrl(a,b){
+  return `https://www.google.com/maps/dir/?api=1&origin=${safeQuery(a.name)}&destination=${safeQuery(b.name)}&travelmode=transit`;
+}
+function moveStop(dayIdx, idx, dir, ev){
+  if(ev) ev.stopPropagation();
+  const arr=days[dayIdx].stops;
+  const ni=idx+dir;
+  if(ni<0 || ni>=arr.length) return;
+  [arr[idx],arr[ni]]=[arr[ni],arr[idx]];
+  saveCustomDays();
+  renderDay(dayIdx);
+  focusStop(ni,false);
+}
+function addDragAndSegmentTools(){
+  if(currentDay<0 || !days[currentDay] || !days[currentDay].stops.length) return;
+  const stops=days[currentDay].stops;
+  stops.forEach((s,idx)=>{
+    const card=document.querySelector(`#stop-${idx} .stop-card h3`);
+    if(card && !card.dataset.handleAdded){
+      card.dataset.handleAdded='1';
+      card.insertAdjacentHTML('afterbegin','<span class="drag-handle" title="按住拖拽排序">☰</span>');
+    }
+    const el=document.querySelector(`#stop-${idx} .actions`);
+    if(!el || el.dataset.enhanced==='1') return;
+    el.dataset.enhanced='1';
+    if(idx<stops.length-1){
+      const seg=document.createElement('a');
+      seg.className='segment-link';
+      seg.target='_blank';
+      seg.rel='noopener';
+      seg.href=segmentUrl(stops[idx],stops[idx+1]);
+      seg.textContent=`查看下一段交通：${stops[idx].name} → ${stops[idx+1].name}`;
+      el.appendChild(seg);
+    }
+  });
+  initSortableTimeline();
+}
+function initSortableTimeline(){
+  const tl=document.getElementById('timeline');
+  if(!tl || tl.dataset.sortableReady==='1' || currentDay<0) return;
+  tl.dataset.sortableReady='1';
+  if(!document.getElementById('dragTip')){
+    const head=document.querySelector('#timelinePanel .panel-head');
+    if(head) head.insertAdjacentHTML('beforeend','<span id="dragTip" class="drag-tip">按住 ☰ 拖拽排序，路线会自动刷新</span>');
+  }
+  new Sortable(tl,{
+    animation:180,
+    handle:'.drag-handle',
+    ghostClass:'sortable-ghost',
+    chosenClass:'sortable-chosen',
+    delay:180,
+    delayOnTouchOnly:true,
+    onEnd:function(evt){
+      if(evt.oldIndex===evt.newIndex || currentDay<0) return;
+      const arr=days[currentDay].stops;
+      const moved=arr.splice(evt.oldIndex,1)[0];
+      arr.splice(evt.newIndex,0,moved);
+      saveCustomDays();
+      renderDay(currentDay);
+      focusStop(evt.newIndex,false);
+    }
+  });
+}
+function getExtraTickets(){
+  try{return JSON.parse(localStorage.getItem(EXTRA_TICKETS_KEY)||'[]')}catch(e){return []}
+}
+function setExtraTickets(v){localStorage.setItem(EXTRA_TICKETS_KEY,JSON.stringify(v))}
+function addTicket(){
+  const type=document.getElementById('newTicketType').value.trim();
+  const title=document.getElementById('newTicketTitle').value.trim();
+  const url=document.getElementById('newTicketUrl').value.trim();
+  const note=document.getElementById('newTicketNote').value.trim();
+  if(!title || !url){alert('请至少填写名称和链接'); return;}
+  const list=getExtraTickets();
+  list.push({type,title,url,note,created:Date.now()});
+  setExtraTickets(list);
+  renderTickets();
+}
+function deleteTicket(i){
+  const list=getExtraTickets(); list.splice(i,1); setExtraTickets(list); renderTickets();
+}
+function getNotes(){
+  try{return JSON.parse(localStorage.getItem(COLLECTION_NOTES_KEY)||'{}')}catch(e){return {}}
+}
+function saveNote(key){
+  const n=getNotes();
+  n[key]=document.getElementById('note_'+key).value;
+  localStorage.setItem(COLLECTION_NOTES_KEY,JSON.stringify(n));
+}
+function editableTicketsHtml(){
+  const list=getExtraTickets();
+  const notes=getNotes();
+  return `
+    <div class="edit-card">
+      <h2>➕ 添加车票 / 门票链接</h2>
+      <select id="newTicketType">
+        <option>车票</option><option>门票</option><option>预约</option><option>酒店/其他</option>
+      </select>
+      <input id="newTicketTitle" placeholder="名称，例如：近铁特急 名古屋→奈良" />
+      <input id="newTicketUrl" placeholder="链接 URL" />
+      <textarea id="newTicketNote" placeholder="备注，例如：座位号、时间、取票方式"></textarea>
+      <button class="btn active" onclick="addTicket()">添加到本机保存</button>
+    </div>
+    <div class="edit-card">
+      <h2>📌 我添加的票券</h2>
+      ${list.length?list.map((x,i)=>`
+        <div class="ticket-row">
+          <span class="badge site">${x.type}</span><b>${x.title}</b>
+          ${x.note?`<div>${x.note}</div>`:''}
+          <div class="mini-links"><a target="_blank" href="${x.url}">打开链接</a><a href="javascript:void(0)" onclick="deleteTicket(${i})">删除</a></div>
+        </div>`).join(''):'<p class="desc">还没有手动添加的票券。</p>'}
+    </div>
+    <div class="edit-card">
+      <h2>📝 Collection 笔记</h2>
+      <b>🐨 Koala Collection</b>
+      <textarea id="note_koala" oninput="saveNote('koala')" placeholder="记录考拉名字、周边、想买的东西">${notes.koala||''}</textarea>
+      <b>🛍️ Tokyo Shopping Layer</b>
+      <textarea id="note_shopping" oninput="saveNote('shopping')" placeholder="记录想买的包、首饰、衣服、店铺价格比较">${notes.shopping||''}</textarea>
+      <b>🍽️ Food Backup</b>
+      <textarea id="note_food" oninput="saveNote('food')" placeholder="记录餐厅排队、备选、必点菜">${notes.food||''}</textarea>
+    </div>
+  `;
+}
+
+const _origRenderDay=renderDay;
+renderDay=function(i){
+  _origRenderDay(i);
+  setTimeout(addDragAndSegmentTools,0);
+};
+const _origRenderTickets=typeof renderTickets==='function'?renderTickets:null;
+if(_origRenderTickets){
+  renderTickets=function(){
+    _origRenderTickets();
+    const tl=document.getElementById('timeline');
+    tl.innerHTML = editableTicketsHtml() + tl.innerHTML;
+  };
+}
+loadCustomDays();
+
+window.addEventListener('load',init);
+</script>
+</body>
+</html>
